@@ -4,8 +4,19 @@ var app = express();
 var path = require('path');
 var logger = require('morgan');
 
+var httpProxy = require('http-proxy');
+
 
 app.use(logger('dev'));
+
+//PROXY TO API
+const apiProxy = httpProxy.createProxyServer({
+    target: "http://localhost:3001"
+  });
+  app.use('/api', function (req, res) {
+    apiProxy.web(req, res);
+  })
+  // END PROXY
 
 // DEFINES A FOLDER FOR THE STATIC FILES
 app.use(express.static('public'));
